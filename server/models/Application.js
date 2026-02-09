@@ -13,8 +13,33 @@ const applicationSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Applied', 'Shortlisted', 'Interview', 'Placed', 'Rejected'],
+        enum: ['Applied', 'Test Scheduled', 'Interview Scheduled', 'Selected', 'Rejected', 'Offer Accepted', 'Offer Rejected'],
         default: 'Applied'
+    },
+    roundsProgress: [{
+        roundName: String,
+        status: {
+            type: String,
+            enum: ['Pending', 'Cleared', 'Failed'],
+            default: 'Pending'
+        },
+        feedback: String,
+        score: Number
+    }],
+    testSchedule: {
+        dateTime: Date,
+        location: String, // Online link or physical venue
+        instructions: String
+    },
+    interviewSchedule: {
+        dateTime: Date,
+        location: String,
+        instructions: String
+    },
+    offerDetails: {
+        salary: Number,
+        offerLetterUrl: String,
+        expiryDate: Date
     },
     appliedAt: {
         type: Date,

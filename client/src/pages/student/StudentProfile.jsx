@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useGetStudentProfileQuery, useUpdateStudentProfileMutation } from '../../features/student/studentApi';
+import { useGetStudentProfileQuery, useUpdateStudentProfileMutation } from '../../services/studentApi';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Save, User } from "lucide-react";
+import { Loader2, Save, User, LogOut } from "lucide-react";
+import { useDispatch } from 'react-redux';
+import { logout } from '../../features/auth/authSlice';
 
 const StudentProfile = () => {
+    const dispatch = useDispatch();
     const { data: profile, isLoading } = useGetStudentProfileQuery();
     const [updateProfile, { isLoading: isUpdating }] = useUpdateStudentProfileMutation();
 
@@ -14,7 +17,9 @@ const StudentProfile = () => {
         resumeUrl: '',
         skills: '',
         cgpa: '',
-        backlogs: ''
+        backlogs: '',
+        graduationYear: '',
+        department: ''
     });
 
     useEffect(() => {
@@ -23,7 +28,9 @@ const StudentProfile = () => {
                 resumeUrl: profile.resumeUrl || '',
                 skills: profile.skills ? profile.skills.join(', ') : '',
                 cgpa: profile.cgpa || '',
-                backlogs: profile.backlogs || 0
+                backlogs: profile.backlogs || 0,
+                graduationYear: profile.graduationYear || '',
+                department: profile.department || ''
             });
         }
     }, [profile]);
@@ -57,6 +64,12 @@ const StudentProfile = () => {
                             <CardTitle className="text-xl text-gray-900">{profile?.user?.name}</CardTitle>
                             <CardDescription className="text-gray-500">{profile?.department} Department • {profile?.user?.email}</CardDescription>
                         </div>
+                        <div className="ml-auto">
+                            <Button variant="destructive" onClick={() => dispatch(logout())}>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Logout
+                            </Button>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -82,6 +95,32 @@ const StudentProfile = () => {
                                     onChange={(e) => setFormData({ ...formData, backlogs: e.target.value })}
                                     className="bg-white border-gray-300 text-gray-900"
                                 />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="year" className="text-gray-700">Graduation Year</Label>
+                                <Input
+                                    id="year"
+                                    type="number"
+                                    value={formData.graduationYear}
+                                    onChange={(e) => setFormData({ ...formData, graduationYear: e.target.value })}
+                                    className="bg-white border-gray-300 text-gray-900"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="dept" className="text-gray-700">Department</Label>
+                                <select
+                                    id="dept"
+                                    value={formData.department}
+                                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                                    className="w-full h-10 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
+                                >
+                                    <option value="">Select Dept</option>
+                                    <option value="CS">CS</option>
+                                    <option value="IT">IT</option>
+                                    <option value="MECH">MECH</option>
+                                    <option value="ECE">ECE</option>
+                                    <option value="CIVIL">CIVIL</option>
+                                </select>
                             </div>
                             <div className="space-y-2 md:col-span-2">
                                 <Label htmlFor="skills" className="text-gray-700">Skills (comma separated)</Label>

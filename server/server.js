@@ -24,6 +24,7 @@ const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('MongoDB Connected');
+
     } catch (err) {
         console.error('MongoDB Connection Error:', err);
         process.exit(1);
@@ -56,12 +57,16 @@ const studentRoutes = require('./routes/studentRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const tpoRoutes = require('./routes/tpoRoutes');
+const companyRoutes = require('./routes/companyRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/tpo', tpoRoutes);
+app.use('/api/companies', companyRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.send('API is running...');

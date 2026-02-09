@@ -26,8 +26,11 @@ const userSchema = new mongoose.Schema({
     },
     profileId: {
         type: mongoose.Schema.Types.ObjectId,
-        refPath: 'role' // Dynamic ref based on role? Or just query the specific collection. Keeping it simple, maybe not needed if we link from the other side. 
-        // Let's keep it optional for now.
+        refPath: 'role'
+    },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company'
     }
 }, { timestamps: true });
 

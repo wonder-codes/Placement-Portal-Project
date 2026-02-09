@@ -19,6 +19,10 @@ const studentSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    graduationYear: {
+        type: Number,
+        required: true
+    },
     skills: [{
         type: String
     }],
@@ -27,7 +31,7 @@ const studentSchema = new mongoose.Schema({
     },
     placementStatus: {
         type: String,
-        enum: ['Unplaced', 'Placed'],
+        enum: ['Unplaced', 'Placed', 'Locked'], // Locked if they already have an offer and one-offer policy is on
         default: 'Unplaced'
     },
     placedAt: {

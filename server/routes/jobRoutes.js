@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { createJob, getJobs, getJobById, getMyJobs } = require('../controllers/jobController');
+const { createJob, getJobs, getJobById, getMyJobs, updateJob, deleteJob } = require('../controllers/jobController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.route('/')
-    .post(protect, authorize('Recruiter'), createJob)
-    .get(protect, getJobs); // Students can see jobs
+    .post(protect, authorize('Recruiter', 'TPO'), createJob)
+    .get(protect, getJobs);
 
-router.get('/my', protect, authorize('Recruiter'), getMyJobs);
+router.get('/my', protect, authorize('Recruiter', 'TPO'), getMyJobs);
 
 router.route('/:id')
-    .get(protect, getJobById);
+    .get(protect, getJobById)
+    .put(protect, authorize('Recruiter', 'TPO'), updateJob)
+    .delete(protect, authorize('TPO'), deleteJob);
 
 module.exports = router;

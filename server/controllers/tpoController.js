@@ -81,4 +81,31 @@ const verifyUser = async (req, res) => {
     }
 };
 
-module.exports = { getAnalytics, getUsersToVerify, verifyUser };
+// @desc    Get all students with full details
+const getStudents = async (req, res) => {
+    try {
+        const students = await Student.find({}).populate('user', 'name email isVerified');
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Update student placement status manually
+const updateStudentStatus = async (req, res) => {
+    try {
+        const { placementStatus } = req.body;
+        const student = await Student.findById(req.params.id);
+
+        if (!student) return res.status(404).json({ message: 'Student not found' });
+
+        student.placementStatus = placementStatus || student.placementStatus;
+        await student.save();
+
+        res.json(student);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+module.exports = { getAnalytics, getUsersToVerify, verifyUser, getStudents, updateStudentStatus };

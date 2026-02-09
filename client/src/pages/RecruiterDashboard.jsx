@@ -2,10 +2,12 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
 import { Button } from '@/components/ui/button';
-import { Briefcase, List, PlusCircle, LogOut } from 'lucide-react';
+import { Briefcase, List, PlusCircle, LogOut, User, Building2 } from 'lucide-react';
 import PostJob from './recruiter/PostJob';
 import MyJobs from './recruiter/MyJobs';
 import JobApplicants from './recruiter/JobApplicants';
+import RecruiterProfile from './recruiter/RecruiterProfile';
+import CompanyProfile from './recruiter/CompanyProfile';
 
 const RecruiterDashboard = () => {
     const dispatch = useDispatch();
@@ -15,6 +17,8 @@ const RecruiterDashboard = () => {
     const navItems = [
         { path: '/recruiter', label: 'My Jobs', icon: List },
         { path: '/recruiter/post', label: 'Post Job', icon: PlusCircle },
+        { path: '/recruiter/company', label: 'Company', icon: Building2 },
+        { path: '/recruiter/profile', label: 'Profile', icon: User },
     ];
 
     return (
@@ -32,7 +36,7 @@ const RecruiterDashboard = () => {
                         const Icon = item.icon;
                         const isActive = location.pathname === item.path;
                         return (
-                            <Link key={item.path} to={item.path}>
+                            <Link key={item.path} to={item.path} className="block">
                                 <Button
                                     variant={isActive ? "secondary" : "ghost"}
                                     className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 mb-1"
@@ -44,12 +48,6 @@ const RecruiterDashboard = () => {
                         )
                     })}
                 </nav>
-                <div className="p-4 border-t border-gray-200">
-                    <Button variant="destructive" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white" onClick={() => dispatch(logout())}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                    </Button>
-                </div>
             </aside>
 
             {/* Main Content */}
@@ -57,6 +55,8 @@ const RecruiterDashboard = () => {
                 <Routes>
                     <Route path="/" element={<MyJobs />} />
                     <Route path="/post" element={<PostJob />} />
+                    <Route path="/company" element={<CompanyProfile />} />
+                    <Route path="/profile" element={<RecruiterProfile />} />
                     <Route path="/jobs/:jobId" element={<JobApplicants />} />
                 </Routes>
             </main>

@@ -22,14 +22,16 @@ const getStudentProfile = async (req, res) => {
 // @access  Private (Student)
 const updateStudentProfile = async (req, res) => {
     try {
-        const { cgpa, backlogs, skills, resumeUrl } = req.body;
+        const { cgpa, backlogs, skills, resumeUrl, department, graduationYear } = req.body;
         const student = await Student.findOne({ user: req.user._id });
 
         if (student) {
-            student.cgpa = cgpa || student.cgpa;
-            student.backlogs = backlogs === undefined ? student.backlogs : backlogs; // Check for 0
+            student.cgpa = cgpa !== undefined ? cgpa : student.cgpa;
+            student.backlogs = backlogs !== undefined ? backlogs : student.backlogs;
             student.skills = skills || student.skills;
             student.resumeUrl = resumeUrl || student.resumeUrl;
+            student.department = department || student.department;
+            student.graduationYear = graduationYear || student.graduationYear;
 
             const updatedStudent = await student.save();
             res.json(updatedStudent);

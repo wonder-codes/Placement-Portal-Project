@@ -3,7 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Briefcase, FileUser, LogOut } from 'lucide-react';
+import { LayoutDashboard, Briefcase, User, LogOut } from 'lucide-react';
 import StudentJobs from './student/StudentJobs';
 import StudentProfile from './student/StudentProfile';
 import StudentApplications from './student/StudentApplications';
@@ -16,7 +16,7 @@ const StudentDashboard = () => {
     const navItems = [
         { path: '/student', label: 'Jobs', icon: Briefcase },
         { path: '/student/applications', label: 'Applications', icon: LayoutDashboard },
-        { path: '/student/profile', label: 'Profile', icon: FileUser },
+        { path: '/student/profile', label: 'Profile', icon: User },
     ];
 
     return (
@@ -34,10 +34,10 @@ const StudentDashboard = () => {
                         const Icon = item.icon;
                         const isActive = location.pathname === item.path;
                         return (
-                            <Link key={item.path} to={item.path}>
+                            <Link key={item.path} to={item.path} className="block">
                                 <Button
                                     variant={isActive ? "secondary" : "ghost"}
-                                    className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                                    className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 mb-1"
                                 >
                                     <Icon className="mr-2 h-4 w-4" />
                                     {item.label}
@@ -46,12 +46,6 @@ const StudentDashboard = () => {
                         )
                     })}
                 </nav>
-                <div className="p-4 border-t border-gray-200">
-                    <Button variant="destructive" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white" onClick={() => dispatch(logout())}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                    </Button>
-                </div>
             </aside>
 
             {/* Main Content */}

@@ -6,8 +6,9 @@ const jobSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    companyName: {
-        type: String,
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
         required: true
     },
     role: {
@@ -21,6 +22,18 @@ const jobSchema = new mongoose.Schema({
         type: Number, // In LPA
         required: true
     },
+    jobType: {
+        type: String,
+        enum: ['Full-time', 'Internship'],
+        required: true,
+        default: 'Full-time'
+    },
+    location: {
+        type: String
+    },
+    bond: {
+        type: String
+    },
     eligibility: {
         minCGPA: {
             type: Number,
@@ -29,7 +42,27 @@ const jobSchema = new mongoose.Schema({
         maxBacklogs: {
             type: Number,
             default: 99
+        },
+        allowedBranches: [{
+            type: String,
+            enum: ['CS', 'IT', 'MECH', 'ECE', 'CIVIL']
+        }],
+        passingYear: {
+            type: Number
         }
+    },
+    rounds: [{
+        name: { type: String }, // e.g. 'Test', 'Technical', 'HR'
+        description: String
+    }],
+    status: {
+        type: String,
+        enum: ['DRAFT', 'PENDING_APPROVAL', 'PUBLISHED', 'CLOSED'],
+        default: 'DRAFT'
+    },
+    isActive: { // TPO can still deactivate manually
+        type: Boolean,
+        default: true
     },
     deadline: {
         type: Date

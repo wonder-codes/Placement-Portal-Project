@@ -16,7 +16,25 @@ export const tpoApi = api.injectEndpoints({
             }),
             invalidatesTags: ['User'],
         }),
+        getTpoStudents: builder.query({
+            query: () => '/tpo/students',
+            providesTags: ['Student'],
+        }),
+        updateTpoStudentStatus: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `/tpo/students/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['Student'],
+        }),
     }),
 });
 
-export const { useGetAnalyticsQuery, useGetUsersToVerifyQuery, useVerifyUserMutation } = tpoApi;
+export const {
+    useGetAnalyticsQuery,
+    useGetUsersToVerifyQuery,
+    useVerifyUserMutation,
+    useGetTpoStudentsQuery,
+    useUpdateTpoStudentStatusMutation
+} = tpoApi;

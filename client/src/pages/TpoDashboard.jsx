@@ -2,10 +2,15 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../features/auth/authSlice';
 import { Button } from '@/components/ui/button';
-import { Activity, Users, ShieldCheck, LogOut } from 'lucide-react';
+import { Activity, Users, ShieldCheck, LogOut, User, Building2, Briefcase, Megaphone } from 'lucide-react';
 import TpoAnalytics from './tpo/TpoAnalytics';
 import TpoVerification from './tpo/TpoVerification';
 import LiveTicker from './tpo/LiveTicker';
+import TpoProfile from './tpo/TpoProfile';
+import ManageCompanies from './tpo/ManageCompanies';
+import ManageJobs from './tpo/ManageJobs';
+import ManageStudents from './tpo/ManageStudents';
+import BulkNotification from './tpo/BulkNotification';
 
 const TpoDashboard = () => {
     const dispatch = useDispatch();
@@ -14,7 +19,12 @@ const TpoDashboard = () => {
 
     const navItems = [
         { path: '/tpo', label: 'Analytics', icon: Activity },
+        { path: '/tpo/companies', label: 'Companies', icon: Building2 },
+        { path: '/tpo/jobs', label: 'Job Postings', icon: Briefcase },
+        { path: '/tpo/students', label: 'Students', icon: Users },
+        { path: '/tpo/announcements', label: 'Announcements', icon: Megaphone },
         { path: '/tpo/verification', label: 'Verification', icon: ShieldCheck },
+        { path: '/tpo/profile', label: 'Profile', icon: User },
     ];
 
     return (
@@ -32,7 +42,7 @@ const TpoDashboard = () => {
                         const Icon = item.icon;
                         const isActive = location.pathname === item.path;
                         return (
-                            <Link key={item.path} to={item.path}>
+                            <Link key={item.path} to={item.path} className="block">
                                 <Button
                                     variant={isActive ? "secondary" : "ghost"}
                                     className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-100 mb-1"
@@ -44,12 +54,6 @@ const TpoDashboard = () => {
                         )
                     })}
                 </nav>
-                <div className="p-4 border-t border-gray-200">
-                    <Button variant="destructive" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white" onClick={() => dispatch(logout())}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                    </Button>
-                </div>
             </aside>
 
             {/* Main Content */}
@@ -60,7 +64,12 @@ const TpoDashboard = () => {
                 <div className="p-8">
                     <Routes>
                         <Route path="/" element={<TpoAnalytics />} />
+                        <Route path="/companies" element={<ManageCompanies />} />
+                        <Route path="/jobs" element={<ManageJobs />} />
+                        <Route path="/students" element={<ManageStudents />} />
+                        <Route path="/announcements" element={<BulkNotification />} />
                         <Route path="/verification" element={<TpoVerification />} />
+                        <Route path="/profile" element={<TpoProfile />} />
                     </Routes>
                 </div>
             </main>

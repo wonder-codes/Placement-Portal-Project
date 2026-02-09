@@ -1,5 +1,5 @@
-import { useGetJobsQuery } from '../../features/jobs/jobApi';
-import { useGetStudentProfileQuery, useApplyForJobMutation } from '../../features/student/studentApi';
+import { useGetJobsQuery } from '../../services/jobApi';
+import { useGetStudentProfileQuery, useApplyForJobMutation } from '../../services/studentApi';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Briefcase, CheckCircle, XCircle } from "lucide-react";
@@ -35,7 +35,9 @@ const StudentJobs = () => {
                     // Eligibility Check
                     const isCgpaOk = (student?.cgpa || 0) >= (job?.eligibility?.minCGPA || 0);
                     const isBacklogsOk = (student?.backlogs || 0) <= (job?.eligibility?.maxBacklogs || 0);
-                    const isEligible = isCgpaOk && isBacklogsOk && !isPlaced;
+                    const isBranchOk = !job.eligibility.allowedBranches || job.eligibility.allowedBranches.length === 0 || job.eligibility.allowedBranches.includes(student?.department);
+
+                    const isEligible = isCgpaOk && isBacklogsOk && isBranchOk && !isPlaced;
 
                     return (
                         <Card key={job._id} className="flex flex-col bg-white border-gray-200">
@@ -43,7 +45,7 @@ const StudentJobs = () => {
                                 <div className="flex justify-between items-start">
                                     <div className="space-y-1">
                                         <CardTitle className="text-gray-900">{job.role}</CardTitle>
-                                        <CardDescription className="text-gray-600">{job.companyName}</CardDescription>
+                                        <CardDescription className="text-gray-600 font-medium">{job.company?.name || job.companyName}</CardDescription>
                                     </div>
                                     <div className="font-bold text-lg text-gray-900">
                                         ₹{job.package} <span className="text-xs font-normal text-gray-500">LPA</span>
@@ -52,7 +54,7 @@ const StudentJobs = () => {
                             </CardHeader>
                             <CardContent className="flex-1 text-sm space-y-4">
                                 <p className="text-gray-600 line-clamp-3">{job.description}</p>
-                                <div className="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-md text-gray-700">
+                                <div className="grid grid-cols-1 gap-2 bg-gray-50 p-3 rounded-md text-gray-700">
                                     <div className="flex items-center gap-2">
                                         {isCgpaOk ? <CheckCircle className="text-green-500 h-4 w-4" /> : <XCircle className="text-red-500 h-4 w-4" />}
                                         <span>Min CGPA: {job.eligibility.minCGPA}</span>
@@ -60,6 +62,10 @@ const StudentJobs = () => {
                                     <div className="flex items-center gap-2">
                                         {isBacklogsOk ? <CheckCircle className="text-green-500 h-4 w-4" /> : <XCircle className="text-red-500 h-4 w-4" />}
                                         <span>Max Backlogs: {job.eligibility.maxBacklogs}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        {isBranchOk ? <CheckCircle className="text-green-500 h-4 w-4" /> : <XCircle className="text-red-500 h-4 w-4" />}
+                                        <span>Branches: {job.eligibility.allowedBranches?.join(', ') || 'All'}</span>
                                     </div>
                                 </div>
                             </CardContent>
@@ -69,7 +75,7 @@ const StudentJobs = () => {
                                     disabled={!isEligible || isApplying}
                                     onClick={() => handleApply(job._id)}
                                 >
-                                    {isPlaced ? 'Uneligible (Placed)' : (!isCgpaOk || !isBacklogsOk) ? 'Not Eligible' : 'Apply Now'}
+                                    {isPlaced ? 'Uneligible (Placed)' : (!isCgpaOk || !isBacklogsOk || !isBranchOk) ? 'Not Eligible' : 'Apply Now'}
                                 </Button>
                             </CardFooter>
                         </Card>
